@@ -123,9 +123,8 @@ int main()
 		* SFML inverting y, for easing of use inverted back to mathematical coordinate thus -y
 		*/
 		const_cast<float&>(vector2Norm.y) = -vector2Norm.y;
-		const float det = CrossProduct(vector1Norm, vector2Norm);
-		const float dot = DotProduct(vector1Norm, vector2Norm);
-		const float angleRad = std::atan2(det, dot);
+		const float angleRad = SignedAngle(vector1Norm, vector2Norm);
+		const float newAngle = std::acos(DotProduct(vector1Norm, vector2Norm) / Magnitude(vector1Norm)* Magnitude(vector2Norm));
 		const float angleDeg = RadToDeg(angleRad);
 
 		//CosAngle
@@ -133,30 +132,30 @@ int main()
 		const float cosf = std::cosf(cosTheta);
 
 		//SinAngle
-		const float scalar = CrossProduct(vector1Norm, vector2Norm);
+		const float scalar = DetProduct(vector1Norm, vector2Norm);
 		const float sinTheta = asinf(scalar / (Magnitude(vector1Norm) * Magnitude(vector2Norm)));
 		const float sinf = std::sinf(sinTheta);
 
 		//Render
 		const sf::Vector2f tip = vectorLine[1].position;
 
-		constexpr auto ProjectVecOnVec = [&](const sf::Vector2f& _startPoint, const sf::Vector2f& _baseVec, const sf::Vector2f& _dirVec) 
+		constexpr auto GetProjectOnVec = [&](const sf::Vector2f& _startPoint, const sf::Vector2f& _baseVec, const sf::Vector2f& _dirVec) 
 			-> sf::Vector2f
 			{
 			sf::Vector2f baseVec = _baseVec;
 			sf::Vector2f dir = Normalize(_dirVec);
 			sf::Vector2f offset = _startPoint - baseVec;
-			sf::Vector2f proj = Project(offset, dir);
+			sf::Vector2f proj = ProjectVec(offset, dir);
 			return baseVec + proj;
 			};
 
 		//Point projection on cosline
-		const sf::Vector2f projPointCos = ProjectVecOnVec(tip, cosinusLine[0].position, cosLineVec);
+		const sf::Vector2f projPointCos = GetProjectOnVec(tip, cosinusLine[0].position, cosLineVec);
 		lineX[0].position = tip;
 		lineX[1].position = projPointCos;
 
 		//Point project on sinLine
-		const sf::Vector2f projPointSin = ProjectVecOnVec(tip, sinusLine[0].position, sinLineVec);
+		const sf::Vector2f projPointSin = GetProjectOnVec(tip, sinusLine[0].position, sinLineVec);
 		lineY[0].position = tip;
 		lineY[1].position = projPointSin;
 
