@@ -5,7 +5,7 @@ It was written in under three hours as a simple exploration of vector math and g
 - a vector constrained to the circle  
 - the angle it forms with the horizontal axis  
 - cosine and sine projections  
-- a tangent line derived from the vector direction  
+- a tangent line derived from the vector direction  = geometric tengent and not triogonemtric tengent
 - determinants for signed orientation  
 # Implementation
 - **C++20**  
