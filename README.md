@@ -1,0 +1,26 @@
+# Overview
+
+This is a small **C++20** program that visualizes basic trigonometric relationships on a circle.  
+It was written in under three hours as a simple exploration of vector math and geometry.
+
+# Purpose
+
+The program displays:
+
+- a vector constrained to the circle  
+- the angle it forms with the horizontal axis  
+- cosine and sine projections  
+- a tangent line derived from the vector direction  
+- determinants for signed orientation  
+
+Mouse input updates the vector in real time, and all trigonometric values are recomputed accordingly.
+
+# Implementation
+
+The code uses:
+
+- **C++20**  
+- SFML for rendering  
+- custom math helpers (dot product, determinant, projection, normalization)
+
+The structure is intentionally minimal to keep the focus on the trigonometric concepts.
