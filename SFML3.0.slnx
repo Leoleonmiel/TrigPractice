@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="SFML3.0/SFML3.0.vcxproj" Id="35a8bca6-eac5-4ed4-bd15-0708b02bb0b2" />
+</Solution>
