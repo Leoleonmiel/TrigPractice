@@ -5,12 +5,38 @@ export module Utils;
 export namespace Utils
 {
 	/*
+	* Dot Product > 0 same _dir
+	* Dot Product < 0 opposite _dir
+	* Dot Product = 0, orthogonal -> 90Deg
+	* Dot Product = 1, if normalized vector : ||_u|| . ||v|| . cos(theta) = colinear
+	*/
+	template<typename T> constexpr
+		float DotProduct(const sf::Vector2<T>& _u, const sf::Vector2<T>& _v)
+	{
+		return _u.x * _v.x + _u.y * _v.y;
+	}
+
+	/*
+	* determinant inspired by matrices 2x2
+	* = ||_u|| . ||v|| . sin(theta)
+	* det > 0, rotation counter clockwise
+	* det < 0, rotation clockwise
+	* det = 0, colinear
+	* det = 1, normalized ||_u|| . ||v|| . sin(theta) = +1||-1 = orthonal +90||-90
+	* Give direction && signed perpendicularity || orthogonal height, read above cases
+	*/
+	template<typename T> constexpr
+		float DetProduct(const sf::Vector2<T>& _u, const sf::Vector2<T>& _v)
+	{
+		return _u.x * _v.y - _u.y * _v.x;
+	}
+	/*
 	* Simple Length without need of squareRoot, give the "fake" length
 	*/
 	template<typename T> constexpr
 		float SqrMagnitude(const sf::Vector2<T>& _v)
 	{
-		return (_v.x * _v.x) + (_v.y * _v.y);
+		return DotProduct(_v, _v);
 	}
 	/*
 	* Heavy comput length because of squareRoot, give "true" length
@@ -21,33 +47,7 @@ export namespace Utils
 	{
 		return std::sqrtf(SqrMagnitude(_v));
 	}
-	/*
-	* Dot Product > 0 same dir
-	* Dot Product < 0 opposite dir
-	* Dot Product = 0, orthogonal -> 90Deg
-	* Dot Product = 1, if normalized vector : ||u|| . ||v|| . cos(theta) = colinear
-	* Give alignment
-	*/
-	template<typename T> constexpr
-		float DotProduct(const sf::Vector2<T>& _u, const sf::Vector2<T>& _v)
-	{
-		return _u.x * _v.x + _u.y * _v.y;
-	}
 
-	/*
-	* determinant inspired by matrices 2x2
-	* = ||u|| . ||v|| . sin(theta)
-	* det > 0, rotation counter clockwise
-	* det < 0, rotation clockwise
-	* det = 0, colinear
-	* det = 1, normalized ||u|| . ||v|| . sin(theta) = +1||-1 = orthonal +90||-90
-	* Give direction && signed perpendicularity || orthogonal height, read above cases
-	*/
-	template<typename T> constexpr
-		float DetProduct(const sf::Vector2<T>& _u, const sf::Vector2<T>& _v)
-	{
-		return _u.x * _v.y - _u.y * _v.x;
-	}
 
 	/*
 	* RAD  |   PI
@@ -98,24 +98,21 @@ export namespace Utils
 	}
 
 	/*
-	* Return scalar number representing len along the direction
+	* return real physical length : positive, negative, or zero
 	*/
 	template<typename T>
-	float ProjectPoint(const sf::Vector2<T>& _u, const sf::Vector2<T>& _dir)
+	float ScalarProjection(const sf::Vector2<T>& _u, const sf::Vector2<T>& _dir)
 	{
-		float dot = DotProduct(_u, _dir);
-		float sqMag = SqrMagnitude(_dir);
-		return dot / sqMag;
+		return DotProduct(_u, _dir) / Magnitude(_dir);
 	}
-
 	/*
 	* ProjectVec Vec on Vec with direction
-	* (u.v/(|v|^2)) . v
+	* (_u.v/(|v|^2)) . v
 	*/
-	template<typename T> constexpr
-		sf::Vector2<T> ProjectVec(const sf::Vector2<T>& _u, const sf::Vector2<T>& _dir)
+	template<typename T>
+	sf::Vector2<T> ProjectVec(const sf::Vector2<T>& _u, const sf::Vector2<T>& _dir)
 	{
-		float scalar = ProjectPoint(_u, _dir);
-		return scalar * _dir;
+		// u.v/|v| = Scalar = projection coeff
+		return DotProduct(_u, _dir) / SqrMagnitude(_dir) * _dir;
 	}
 }
